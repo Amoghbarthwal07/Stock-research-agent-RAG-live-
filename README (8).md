@@ -1,10 +1,11 @@
-# Stock Research Assistant with SEC Filing Search
 
 I built this to answer stock questions using two things at once: live market data from Yahoo Finance, and the text of SEC filings (10-Qs and 10-Ks) that I load into a vector database.
 
 You type a question and an agent decides what it needs. Ask "How is NVDA trading, and what does its latest 10-Q say about revenue?" and it pulls the live price and also searches the filing. The page shows which tools it used and where the answer came from, so you can check it yourself.
 
-<!-- Add a screenshot of the page here, e.g. ![screenshot](docs/screenshot.png) -->
+<img width="1917" height="1078" alt="Screenshot 2026-10-08 215400" src="https://github.com/user-attachments/assets/e8d100f5-e9d9-435a-aab5-9335ad7fff88" />
+
+
 
 ## How it fits together
 
