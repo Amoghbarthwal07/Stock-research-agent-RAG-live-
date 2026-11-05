@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Stock Research Assistant</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card { background: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 100%; max-width: 700px; padding: 30px; }
+        h1 { color: #333; margin-bottom: 20px; font-size: 1.5rem; text-align: center; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        input[type="text"] { flex: 1; padding: 12px 16px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; outline: none; transition: border 0.2s; }
+        input[type="text"]:focus { border-color: #007bff; }
+        button { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #a0c4ff; cursor: not-allowed; }
+        .spinner { display: none; text-align: center; margin: 15px 0; color: #666; font-style: italic; }
+        .result-container { display: none; border-top: 2px solid #eee; padding-top: 20px; }
+        .topic { font-size: 1.25rem; font-weight: bold; color: #1a252f; margin-bottom: 10px; }
+        .summary { color: #444; line-height: 1.6; margin-bottom: 15px; background: #f8f9fa; padding: 15px; border-radius: 6px; }
+        .tags-section { display: flex; flex-direction: column; gap: 8px; font-size: 0.9rem; color: #555; }
+        .tag-group span { background: #e9ecef; color: #495057; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; margin-right: 5px; display: inline-block; margin-top: 4px; }
+        .error { color: #d9534f; background: #fdf7f7; padding: 10px; border-radius: 6px; display: none; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>Stock Research Assistant</h1>
+    <img src="Screenshot 2026-09-18 104113.png" class="img-fluid" alt="Friendly robot avatar with teal accents wearing a headset, facing forward with a neutral helpful expression; plain light background; no visible text"/>
+    <div class="input-group">
+        <input type="text" id="queryInput" placeholder="e.g., Analyze TSLA performance and news">
+        <button id="submitBtn" onclick="sendQuery()">Search</button>
+    </div>
+
+    <div id="spinner" class="spinner">Fetching data and analyzing...</div>
+    <div id="errorMessage" class="error"></div>
+
+    <div id="resultContainer" class="result-container">
+        <div class="topic" id="resTopic"></div>
+        <div class="summary" id="resSummary"></div>
+        
+        <div class="tags-section">
+            <div class="tag-group">
+                <strong>Tools Used:</strong>
+                <div id="resTools"></div>
+            </div>
+            <div class="tag-group">
+                <strong>Sources:</strong>
+                <div id="resSources"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function sendQuery() {
+        const queryInput = document.getElementById('queryInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const spinner = document.getElementById('spinner');
+        const errorMessage = document.getElementById('errorMessage');
+        const resultContainer = document.getElementById('resultContainer');
+
+        const query = queryInput.value.trim();
+        if (!query) return;
+
+        // UI Reset
+        errorMessage.style.display = 'none';
+        resultContainer.style.display = 'none';
+        spinner.style.display = 'block';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/research', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: query })
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            // Render Output
+            document.getElementById('resTopic').innerText = data.topic || 'Research Results';
+            document.getElementById('resSummary').innerText = data.summary || 'No summary generated.';
+
+            renderTags('resTools', data.tools_used);
+            renderTags('resSources', data.sources);
+
+            resultContainer.style.display = 'block';
+
+        } catch (err) {
+            errorMessage.innerText = "Error: " + err.message;
+            errorMessage.style.display = 'block';
+        } finally {
+            spinner.style.display = 'none';
+            submitBtn.disabled = false;
+        }
+    }
+
+    function renderTags(elementId, items) {
+        const container = document.getElementById(elementId);
+        container.innerHTML = '';
+        if (items && items.length > 0) {
+            items.forEach(item => {
+                const tag = document.createElement('span');
+                tag.innerText = item;
+                container.appendChild(tag);
+            });
+        } else {
+            container.innerText = 'None';
+        }
+    }
+</script>
+
+</body>
+</html>
