@@ -1,0 +1,29 @@
+[project]
+name = "ragst"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Amogh", email = "amoghbarthwal007@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.142.2",
+    "google-genai>=2.28.0",
+    "inngest>=0.5.19",
+    "llama-index-core>=0.14.25",
+    "llama-index-readers-file>=0.7.0",
+    "pymupdf>=1.28.2",
+    "python-dotenv>=1.2.4",
+    "python-multipart>=0.0.32",
+    "qdrant-client>=1.19.1",
+    "streamlit>=1.65.0",
+    "uvicorn>=0.54.0",
+]
+
+[project.scripts]
+ragst = "ragst:main"
+
+[build-system]
+requires = ["uv_build>=0.12.8,<0.13.0"]
+build-backend = "uv_build"
