@@ -1,5 +1,5 @@
 
-I built this to answer stock questions using two things at once: live market data from Yahoo Finance, and the text of SEC filings (10-Qs and 10-Ks) that I load into a vector database.
+I built this to answer stock question using two things at once: live market data from Yahoo Finance, and the text of SEC filings (10-Qs and 10-Ks) that I load into a vector database.
 
 You type a question and an agent decides what it needs. Ask "How is NVDA trading, and what does its latest 10-Q say about revenue?" and it pulls the live price and also searches the filing. The page shows which tools it used and where the answer came from, so you can check it yourself.
 
